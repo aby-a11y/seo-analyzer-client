@@ -1,0 +1,138 @@
+.App {
+  min-height: 100vh;
+}
+
+.App-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+/* ========== ACCORDION SMOOTH TRANSITIONS ========== */
+
+/* Accordion container */
+.accordion-item {
+  transition: all 0.3s ease;
+}
+
+.accordion-item.expanded {
+  border-color: #db5f0c !important;
+  box-shadow: 0 4px 12px rgba(248, 248, 250, 0.15);
+}
+
+/* Accordion button hover */
+.accordion-button {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.accordion-button:hover {
+  background-color: rgba(99, 102, 241, 0.05);
+}
+
+/* Accordion content - smooth slide down */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s ease,
+              padding 0.3s ease;
+  opacity: 0;
+  padding: 0;
+}
+
+.accordion-content.expanded {
+  max-height: 2000px; /* Large enough for any content */
+  opacity: 1;
+  padding: 1rem 0;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s ease 0.1s,
+              padding 0.3s ease;
+}
+
+/* Plus/Minus icon rotation */
+.accordion-icon {
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.accordion-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* Fade in animation for expanded content */
+@keyframes accordionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.accordion-details {
+  animation: accordionFadeIn 0.3s ease-out;
+}
