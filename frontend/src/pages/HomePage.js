@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Search, Sparkles, TrendingUp, Target, FileText, Zap, ArrowRight, History, User, Mail, Phone, X } from 'lucide-react';
+import { Search, Sparkles, TrendingUp, Target, FileText, Zap, ArrowRight, History, User, Mail, Phone, X, Lock } from 'lucide-react';
 
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+const FREE_LIMIT = 3;
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -14,6 +16,10 @@ const HomePage = () => {
   const [error, setError] = useState('');
   const [normalizedUrl, setNormalizedUrl] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+const getUsedCount = () => parseInt(localStorage.getItem('seo_analyses_used') || '0');
+const getRemainingCount = () => Math.max(0, FREE_LIMIT - getUsedCount());
+
   const [userInfo, setUserInfo] = useState({ name: '', email: '', phone: '' });
   const [modalErrors, setModalErrors] = useState({});
 
@@ -50,6 +56,12 @@ const HomePage = () => {
  const handleAnalyze = async (e) => {
   e.preventDefault();
   setError('');
+   
+  if (getUsedCount() >= FREE_LIMIT) {
+    setShowUpgradeModal(true);
+    return;
+  }
+
 
   const norm = normalizeUrl(url);
 
@@ -94,6 +106,7 @@ const handleModalSubmit = async () => {
         phone: userInfo.phone.trim(),
       },
     });
+    localStorage.setItem('seo_analyses_used', getUsedCount() + 1);
     navigate(`/report/${response.data.id}`);
   } catch (err) {
     setError(err.response?.data?.detail || 'Failed to analyze website.');
@@ -279,6 +292,50 @@ const handleModalSubmit = async () => {
           Start Analysis <ArrowRight className="w-4 h-4" />
         </button>
       </div>
+    </div>
+  </div>
+)}
+{showUpgradeModal && (
+  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+    <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">
+      <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <Lock className="w-8 h-8 text-red-500" />
+      </div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">Free Limit Reached!</h2>
+      <p className="text-gray-500 text-sm mb-6">
+        You've used all <strong>{FREE_LIMIT} free analyses</strong>.<br />
+        Upgrade to Pro for unlimited access.
+      </p>
+      <div className="grid grid-cols-2 gap-3 mb-6 text-left">
+        <div className="border-2 border-gray-200 rounded-xl p-4">
+          <p className="font-bold text-gray-700 text-sm">Free</p>
+          <p className="text-2xl font-black text-gray-800">₹0</p>
+          <ul className="text-xs text-gray-400 mt-2 space-y-1">
+            <li>✓ 3 analyses/month</li>
+            <li>✗ Unlimited access</li>
+          </ul>
+        </div>
+        <div className="border-2 border-indigo-500 rounded-xl p-4 bg-indigo-50 relative">
+          <span className="absolute -top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full">Popular</span>
+          <p className="font-bold text-indigo-700 text-sm">Pro ⭐</p>
+          <p className="text-2xl font-black text-indigo-800">₹999<span className="text-xs font-normal">/mo</span></p>
+          <ul className="text-xs text-indigo-500 mt-2 space-y-1">
+            <li>✓ Unlimited analyses</li>
+            <li>✓ Priority support</li>
+          </ul>
+        </div>
+      </div>
+      <a href="mailto:deya5579@gmail.com?subject=Upgrade to Pro"
+        className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-base hover:bg-indigo-700 transition-colors mb-3 flex items-center justify-center gap-2">
+        <Mail className="w-4 h-4" /> Contact Us to Upgrade
+      </a>
+      <p className="text-xs text-gray-400 mb-3">
+        Or WhatsApp: <span className="font-medium text-gray-600">+91 7004484846</span>
+      </p>
+      <button onClick={() => setShowUpgradeModal(false)}
+        className="text-xs text-gray-400 hover:text-gray-600 underline">
+        Maybe later
+      </button>
     </div>
   </div>
 )}
