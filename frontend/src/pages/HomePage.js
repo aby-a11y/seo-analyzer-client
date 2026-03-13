@@ -252,7 +252,7 @@ const handleModalSubmit = async () => {
           <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input type="text" value={userInfo.name}
             onChange={(e) => { setUserInfo({...userInfo, name: e.target.value}); setModalErrors({...modalErrors, name: ''}); }}
-            placeholder="Apna naam likho"
+            placeholder="Enter your name"
             className={`w-full pl-10 pr-4 py-3 border rounded-xl outline-none ${modalErrors.name ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-indigo-500'}`} />
         </div>
         {modalErrors.name && <p className="text-red-500 text-xs mt-1">⚠ {modalErrors.name}</p>}
