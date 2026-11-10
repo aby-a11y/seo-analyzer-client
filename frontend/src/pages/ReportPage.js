@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,7 +7,6 @@ import {
   Sparkles, Link2, Image as ImageIcon, Share2, Shield, Download, Loader2
 } from 'lucide-react';
 import ResponsivePreview from '../components/ResponsivePreview';
-import { downloadReportPdf } from '../lib/reportPdf';
 
 
 
@@ -117,19 +115,19 @@ const ReportPage = ({ shared = false }) => {
       default: return <Info className="w-5 h-5" />;
     }
   };
-  const downloadPDF = () => {
+  const downloadPDF = async () => {
     setPdfBusy(true);
-    // small delay lets the spinner paint before the (synchronous) PDF build
-    setTimeout(() => {
-      try {
-        downloadReportPdf(report);
-      } catch (e) {
-        console.error('PDF generation failed', e);
-        alert('Could not generate the PDF. Please try again.');
-      } finally {
-        setPdfBusy(false);
-      }
-    }, 50);
+    try {
+      // loaded on demand so the report page itself opens faster
+      const { downloadReportPdf } = await import('../lib/reportPdf');
+      await new Promise((r) => setTimeout(r, 30)); // let the spinner paint
+      downloadReportPdf(report);
+    } catch (e) {
+      console.error('PDF generation failed', e);
+      alert('Could not generate the PDF. Please try again.');
+    } finally {
+      setPdfBusy(false);
+    }
   };
 
   if (loading) {
