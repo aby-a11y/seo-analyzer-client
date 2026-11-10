@@ -148,10 +148,10 @@ const HistoryPage = () => {
                     )}
 
                     <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                      {report.seo_issues && (
+                      {(report.issue_count ?? report.seo_issues?.length) !== undefined && (
                         <span className="flex items-center space-x-1">
-                          <span className="font-medium">{report.seo_issues.length}</span>
-                          <span>issue{report.seo_issues.length !== 1 ? 's' : ''} found</span>
+                          <span className="font-medium">{report.issue_count ?? report.seo_issues.length}</span>
+                          <span>issue{(report.issue_count ?? report.seo_issues.length) !== 1 ? 's' : ''} found</span>
                         </span>
                       )}
                       {report.word_count > 0 && (
